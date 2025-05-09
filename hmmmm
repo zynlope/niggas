@@ -1,0 +1,1127 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Window = Rayfield:CreateWindow({
+   Name = "Mochi Hile Menü 👅",
+   Icon = 126133429358591, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "Mochi Mochi",
+   LoadingSubtitle = "plusgiant tarafından",
+   Theme = "Ocean", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+
+   Discord = {
+      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local Tab = Window:CreateTab("Mochi", 126133429358591) -- Title, Image
+local Section = Tab:CreateSection("yaptığım şeyler")
+
+local scripts = {
+    {name = "Firework fling (BUGGY)", url = "https://raw.githubusercontent.com/rolezeay/fireworkfilng/refs/heads/main/hmmm"},
+    {name = "Chat Mimicker", url = "https://raw.githubusercontent.com/rolezeay/chatmimicker/refs/heads/main/hmmm"},
+    {name = "Chat logger", url = "custom", func = function()
+                          if game:service('RunService'):IsStudio() then print('!STUDIO!') else
+    if game:service('CoreGui'):findFirstChild('LogHolder') then return nil
+    end
+end
+
+local LogHolder = Instance.new("ScreenGui")
+local Logs = Instance.new("Frame")
+local Scroll = Instance.new("ScrollingFrame")
+local Template = Instance.new("TextLabel")
+
+LogHolder.Name = "LogHolder"
+if game:service('RunService'):IsStudio() then LogHolder.Parent = game.Players.LocalPlayer.PlayerGui else
+    LogHolder.Parent = game.CoreGui
+end
+
+Logs.Name = "Logs"
+Logs.Parent = LogHolder
+Logs.AnchorPoint = Vector2.new(0.5, 0.5)
+Logs.BackgroundColor3 = Color3.new(0, 0, 0)
+Logs.Position = UDim2.new(0.200000003, 0, 0.200000003, 0)
+Logs.Size = UDim2.new(0, 400, 0, 250)
+Logs.Style = Enum.FrameStyle.DropShadow
+
+Scroll.Name = "Scroll"
+Scroll.Parent = Logs
+Scroll.BackgroundColor3 = Color3.new(0, 0, 0)
+Scroll.BackgroundTransparency = 1
+Scroll.BorderSizePixel = 0
+Scroll.Size = UDim2.new(1, 0, 1, 0)
+Scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+Scroll.ScrollBarThickness = 6
+
+Template.Name = "Template"
+Template.Parent = Logs
+Template.BackgroundColor3 = Color3.new(1, 1, 1)
+Template.BackgroundTransparency = 1
+Template.Position = UDim2.new(0, 0, 0, -25)
+Template.Size = UDim2.new(1, 0, 0, 20)
+Template.Font = Enum.Font.ArialBold
+Template.Text = ""
+Template.TextColor3 = Color3.new(1, 1, 1)
+Template.TextSize = 15
+Template.TextXAlignment = Enum.TextXAlignment.Left
+Template.TextWrap = true
+
+Logs.Active = true
+Logs.Draggable = true
+
+local loggedTable = {}
+
+local getTotalSize = function()
+local totalSize = UDim2.new(0, 0, 0, 0)
+    
+    for i, v in next, loggedTable do
+        totalSize = totalSize + UDim2.new(0, 0, 0, v.Size.Y.Offset)
+    end
+    
+    return totalSize
+end
+
+local BUD = UDim2.new(0, 0, 0, 0)
+local TotalNum = 0
+
+local function GenLog(txt, colo, time)
+    local oldColo = Color3.fromRGB(0, 0, 0) 
+    
+    local Temp = Template:Clone()
+    Temp.Parent = Scroll
+    Temp.Name = txt..'Logged'
+    Temp.Text = tostring(txt)
+    Temp.Visible = true
+    Temp.Position = BUD + UDim2.new(0, 0, 0, 0)
+    if colo then oldColo = colo Temp.TextColor3 = colo elseif not colo then Temp.TextColor3 = Color3.fromRGB(200, 200, 200) end
+    local timeVal = Instance.new('StringValue', Temp)
+    timeVal.Name = 'TimeVal'
+    timeVal.Value = time
+
+    TotalNum = TotalNum + 1
+    
+    if not Temp.TextFits then repeat Temp.Size = UDim2.new(Temp.Size.X.Scale, Temp.Size.X.Offset, Temp.Size.Y.Scale, Temp.Size.Y.Offset + 10)
+        Temp.Text = txt
+    until Temp.TextFits 
+end
+
+    BUD = BUD + UDim2.new(0, 0, 0, Temp.Size.Y.Offset)
+    
+    table.insert(loggedTable, Temp)
+    
+    local totSize = getTotalSize()
+    
+    if totSize.Y.Offset >= Scroll.CanvasSize.Y.Offset then Scroll.CanvasSize = UDim2.new(totSize.X.Scale, totSize.X.Offset, totSize.Y.Scale, totSize.Y.Offset + 100)
+    Scroll.CanvasPosition = Scroll.CanvasPosition + Vector2.new(0, totSize.Y.Offset) 
+    end
+    
+    return Temp
+end
+
+local ChatData = ""
+
+local function SaveToFile()
+    local t = os.date("*t")
+    local dateDat = t['hour']..' '..t['min']..' '..t['sec']..' '..t['day']..'.'..t['month']..'.'..t['year']
+    
+    ChatData = ""
+    
+    for i, v in pairs(Scroll:GetChildren()) do
+        ChatData = ChatData..v.TimeVal.Value..' '..v.Text..'\n'
+    end
+    
+    writefile('ChatLogs '..dateDat..'.txt', ChatData)
+end
+
+local function Clear()
+    loggedTable = {}
+    ChatData = ""
+    Scroll.CanvasPosition = Vector2.new(0, 0)
+    for i, v in pairs(Scroll:GetChildren()) do
+        v:Destroy()
+    end
+    Scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+    BUD = UDim2.new(0, 0, 0, 0)
+end
+
+local LogPlr = function(plr)
+            plr.Chatted:connect(function(msg)
+                
+            local t = os.date("*t")
+            local dateDat = t['hour']..':'..t['min']..':'..t['sec']
+    
+            if string.len(msg) >= 1000 then return nil end
+            if string.lower(msg) == 'clear' and plr == game:service('Players').LocalPlayer then Clear() return nil end
+            if string.lower(msg) == 'savetofile' and plr == game:service('Players').LocalPlayer then SaveToFile() return nil end
+            if string.sub(msg, 1, 1):match('%p') and string.sub(msg, 2, 2):match('%a') and string.len(msg) >= 5 then GenLog(plr.Name..': '..msg, Color3.new(255, 0, 0), dateDat) else
+            GenLog(plr.Name..': '..msg, Color3.new(255, 255, 255), dateDat)
+            end
+    end)
+end
+
+for i, v in pairs(game.Players:GetChildren()) do
+    LogPlr(v)
+end
+
+game.Players.PlayerAdded:connect(function(plr)
+    LogPlr(plr)
+end)
+    end},
+    {name = "Load E to rewind character", url = "custom", func = function()
+
+      local key = "E"
+local flashbacklength = 80
+local flashbackspeed = 1.5
+
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+local name = "FlashbackSystem"
+local frames, uis, LP, RS = {}, game:GetService("UserInputService"), game:GetService("Players").LocalPlayer, game:GetService("RunService")
+
+local VRService = game:GetService("VRService")
+if VRService.VREnabled then return end
+
+game:GetService("StarterPlayer").DevComputerMovementMode = Enum.DevComputerMovementMode.KeyboardMouse
+game:GetService("StarterPlayer").DevTouchMovementMode = Enum.DevTouchMovementMode.Thumbstick
+
+if not LP or not uis then return end
+
+pcall(RS.UnbindFromRenderStep, RS, name)
+
+local function getchar()
+   return LP.Character or LP.CharacterAdded:Wait()
+end
+
+function gethrp(c)
+   return c and (c:FindFirstChild("HumanoidRootPart") or c.RootPart or c.PrimaryPart or c:FindFirstChild("Torso") or c:FindFirstChild("UpperTorso") or c:FindFirstChildWhichIsA("BasePart"))
+end
+
+local flashback = { lastinput = false, canrevert = true }
+
+function flashback:Advance(char, hrp, hum, allowinput)
+   if not char or not hrp or not hum then return end
+   if #frames > flashbacklength * 60 then
+       table.remove(frames, 1)
+   end
+
+   if allowinput and not self.canrevert then
+       self.canrevert = true
+   end
+
+   if self.lastinput then
+       hum.PlatformStand = false
+       self.lastinput = false
+   end
+
+   table.insert(frames, {
+       hrp.CFrame,
+       hrp.Velocity,
+       hum:GetState(),
+       hum.PlatformStand,
+       char:FindFirstChildOfClass("Tool")
+   })
+end
+
+function flashback:Revert(char, hrp, hum)
+   if not char or not hrp or not hum or #frames == 0 or not self.canrevert then
+       self.canrevert = false
+       self:Advance(char, hrp, hum)
+       return
+   end
+
+   local num = #frames
+   for i = 1, flashbackspeed do
+       table.remove(frames, num)
+       num = num - 1
+   end
+   
+   self.lastinput = true
+   local lastframe = frames[num]
+   table.remove(frames, num)
+   hrp.CFrame = lastframe[1]
+   hrp.Velocity = -lastframe[2]
+   hum:ChangeState(lastframe[3])
+   hum.PlatformStand = lastframe[4] 
+   
+   local currenttool = char:FindFirstChildOfClass("Tool")
+   if lastframe[5] then
+       if not currenttool then
+           hum:EquipTool(lastframe[5])
+       end
+   else
+       hum:UnequipTools()
+   end
+end
+
+local function step()
+   local char = getchar()
+   local hrp = gethrp(char)
+   local hum = char and char:FindFirstChildWhichIsA("Humanoid")
+   if not char or not hrp or not hum then return end
+   
+   if uis:IsKeyDown(Enum.KeyCode[key]) then
+       flashback:Revert(char, hrp, hum)
+   else
+       flashback:Advance(char, hrp, hum, true)
+   end
+   
+   if uis:IsKeyDown(Enum.KeyCode[killKey]) then
+       RS:UnbindFromRenderStep(name)
+       script:Destroy()
+   end
+end
+
+pcall(function()
+   RS:BindToRenderStep(name, 1, step)
+end)
+
+    end},
+    {name = "Midnight Mode", url = "custom", func = function()
+        local Lighting = game:GetService("Lighting")
+        Lighting.ClockTime = 24
+        Lighting.Ambient = Color3.fromRGB(50, 50, 50)
+        Lighting.OutdoorAmbient = Color3.fromRGB(50, 50, 50)
+        Lighting.FogColor = Color3.fromRGB(0, 0, 0)
+        Lighting.FogEnd = 500
+        Lighting.Brightness = 1.0
+    end},
+    {name = "Anti AFK (Credits: Zynlope - proxycat)", url = "custom", func = function()
+        local antiAFK = false
+        antiAFK = not antiAFK
+        if antiAFK then
+            local player = game.Players.LocalPlayer
+            local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
+
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "Anti AFK",
+                Text = "Anti-AFK habilitado (enabled)",
+                Icon = playerHeadIcon,
+                Duration = 3,
+                Button1 = "ok"
+            })
+
+            local vu = game:GetService("VirtualUser")
+            game.Players.LocalPlayer.Idled:Connect(function()
+                vu:CaptureController()
+                vu:ClickButton2(Vector2.new(0, 0))
+            end)
+        end
+    end},
+    {name = "Wall Jump / Player Jump", url = "custom", func = function()
+        local wallJumpForce = Vector3.new(0, -70, -70)
+        local wallDetectionDistance = 3
+        local cooldownTime = 0
+
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoid = character:WaitForChild("Humanoid")
+        local rootPart = character:WaitForChild("HumanoidRootPart")
+        local canWallJump = true
+
+        local function isNearWall()
+            local rayParams = RaycastParams.new()
+            rayParams.FilterDescendantsInstances = {character}
+            rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+            local directions = {
+                Vector3.new(1, 0, 0),
+                Vector3.new(-1, 0, 0),
+                Vector3.new(0, 0, 1),
+                Vector3.new(0, 0, -1)
+            }
+
+            for _, dir in ipairs(directions) do
+                local ray = workspace:Raycast(rootPart.Position, dir * wallDetectionDistance, rayParams)
+                if ray then
+                    return ray
+                end
+            end
+            return nil
+        end
+
+        local function wallJump()
+            if not canWallJump then return end
+            local wallRay = isNearWall()
+            if wallRay then
+                canWallJump = false
+                local jumpDirection = wallRay.Normal * wallJumpForce.Magnitude
+                rootPart.Velocity = Vector3.new(jumpDirection.X, wallJumpForce.Y, jumpDirection.Z)
+                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                wait(cooldownTime)
+                canWallJump = true
+            end
+        end
+
+        game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+            if gameProcessed then return end
+            if input.KeyCode == Enum.KeyCode.Space then
+                wallJump()
+            end
+        end)
+    end},
+}
+
+-- Now create the buttons dynamically
+for _, scriptInfo in ipairs(scripts) do
+    Tab:CreateButton({
+        Name = scriptInfo.name,
+        Callback = function()
+            if scriptInfo.url == "custom" and scriptInfo.func then
+                scriptInfo.func()
+            else
+                loadstring(game:HttpGet(scriptInfo.url))()
+            end
+        end,
+    })
+end
+
+getgenv().WalkSpeedValue = 25
+local BunnyHopActive = false
+local BunnyHopConnection
+
+local Player = game:GetService("Players").LocalPlayer
+local Humanoid = Player.Character:WaitForChild("Humanoid")
+
+Humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+    Humanoid.WalkSpeed = getgenv().WalkSpeedValue
+end)
+Humanoid.WalkSpeed = getgenv().WalkSpeedValue
+
+local Toggle = Tab:CreateToggle({
+    Name = "Bunny Hop (+0.5 speed every jump)",
+    CurrentValue = false,
+    Flag = "BunnyHopToggle",
+    Callback = function(Value)
+        BunnyHopActive = Value
+
+        if Value then
+            getgenv().WalkSpeedValue = 25
+            Humanoid.WalkSpeed = getgenv().WalkSpeedValue
+
+            BunnyHopConnection = task.spawn(function()
+                while BunnyHopActive do
+                    if Humanoid.FloorMaterial ~= Enum.Material.Air then
+                        Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                        getgenv().WalkSpeedValue += 0.5
+                        Humanoid.WalkSpeed = getgenv().WalkSpeedValue
+                        task.wait(0.5)
+                    else
+                        task.wait(0.1)
+                    end
+                end
+            end)
+        else
+            getgenv().WalkSpeedValue = 25
+            Humanoid.WalkSpeed = 25
+        end
+    end,
+})
+
+local Tab = Window:CreateTab("bypasser", 78656669261642) -- Title, Image
+local Paragraph = Tab:CreateParagraph({Title = "UYARI:", Content = "Lütfen bunun çalışması için hesap ayarlarından dil kısmını Қазақ Тілі yapın."})
+local TextChatService = game:GetService("TextChatService")
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+
+	local function containsSwearWord(word)
+		for swear in pairs(swearWords) do
+			if word:lower():find(swear, 1, true) then
+				return true
+			end
+		end
+		return false
+	end
+	
+	local lowercaseBypasses = {
+	["fucking"] = "fบcking",
+	["fuck"] = "fบck",
+    ["fucked"] = "fบcked",
+    ["fuckidy"] = "fบckidy",
+    ["niggerest"] = "ⴖiggerest",
+	["nigger"] = "ⴖigger",
+	["niggers"] = "ⴖiggers",
+	["nigga"] = "ⴖigga",
+	["niggas"] = "ⴖiggas",
+	["ass"] = "аรร",
+    ["retard"] = "ꞅetard",
+    ["bastard"] = "bลstลrd",
+	["dumbass"] = "dบmbаรร",
+	["bitch"] = "bi〪tch",
+	["cunt"] = "cบnt",
+	["hoe"] = "һoe",
+	["hoes"] = "һoes",
+	["pussy"] = "pบssy",
+	["discord"] = "disִcord",
+	["shit"] = "shi〪t",
+	["raped"] = "rаped",
+	["rape"] = "rаpe",
+	["hitler"] = "hi〪tler",
+	["porn"] = "porⴖ",
+	["pornhub"] = "porⴖhub",
+	["dick"] = "diᲃk",
+	["dicks"] = "diᲃks",
+	["dildo"] = "dil〪do",
+	["dildos"] = "dil〪dos",
+	["kill"] = "kіll",
+	["yourself"] = "yoบrself",
+	["faggot"] = "fลggot",
+	["slut"] = "slบt",
+	["sex"] = "sеִx",
+	["cum"] = "cบm",
+	["boobs"] = "bоִоִbs",
+	["boob"] = "bоִоִb",
+	["lmao"] = "lmao",
+	["lmfao"] = "lmfao",
+	["suck"] = "sบck",
+	["sucker"] = "sบcker",
+	["dirty"] = "dіrty",
+	["fat"] = "fลt",
+	["raping"] = "rลping"
+}
+
+local uppercaseBypasses = {
+    ["FUCKING"] = "ꜰUCKING",
+	["FUCK"] = "ꜰUCK",
+    ["FUCKED"] = "ꜰUCKED",
+    ["FUCKIDY"] = "ꜰUCKIDY",
+    ["BITCH"] = "BI〪TCH",
+    ["ASS"] = "AS〪S",
+    ["NIGGA"] = "NI〪GGA",
+	["NIGGAS"] = "NI〪GGAS",
+    ["NIGGER"] = "NI〪GGER",
+    ["NIGGEREST"] = "NI〪GGEREST",
+	["NIGGERS"] = "NI〪GGERS",
+    ["HOE"] = "HOE",
+	["HOES"] = "HOES",
+    ["CUNT"] = "CUN〪T",
+	["DICK"] = "DI〪CK",
+	["HITLER"] = "HI〪TLER",
+	["PORN"] = "POR〪N",
+	["RAPING"] = "RАPI〪NG",
+	["RAPED"] = "RАPED",
+	["RAPE"] = "RАPE",
+	["FAGGOT"] = "ꜰAGGOT",
+	["DISCORD"] = "DISִCORD",
+	["SLUT"] = "SL〪UT",
+	["SEX"] = "SЕִX",
+	["LMAO"] = "LMAO",
+	["LMFAO"] = "LMFAO",
+	["DIRTY"] = "DІRTY",
+    ["PUSSY"] = "Р〪USSY"
+}
+
+local function transformText(inputText)
+    local transformedWords = {}
+
+    for word in inputText:gmatch("%S+") do
+        local cleaned = word:gsub("%p", "")
+        local lowered = cleaned:lower()
+        local replacedWord = word
+        local found = false
+
+        for bad, bypass in pairs(lowercaseBypasses) do
+            local startIndex, endIndex = lowered:find(bad, 1, true)
+            if startIndex then
+                -- Replace the matched part while preserving the rest
+                replacedWord = cleaned:sub(1, startIndex - 1) .. bypass .. cleaned:sub(endIndex + 1)
+                found = true
+                break
+            end
+        end
+
+        if not found then
+            for bad, bypass in pairs(uppercaseBypasses) do
+                local loweredBad = bad:lower()
+                local startIndex, endIndex = lowered:find(loweredBad, 1, true)
+                if startIndex then
+                    replacedWord = cleaned:sub(1, startIndex - 1) .. bypass .. cleaned:sub(endIndex + 1)
+                    found = true
+                    break
+                end
+            end
+        end
+
+        table.insert(transformedWords, replacedWord)
+    end
+
+    return table.concat(transformedWords, "")
+end
+
+	
+	local function sendMessage(message)
+		local channel = TextChatService:WaitForChild("TextChannels"):FindFirstChild("RBXGeneral")
+		if channel then
+			channel:SendAsync(message)
+		end
+	end
+
+local Input = Tab:CreateInput({
+    Name = "Auto bypasser",
+    CurrentValue = "",
+    PlaceholderText = "message here",
+    RemoveTextAfterFocusLost = true,
+    Flag = "Input1",
+    Callback = function(Text)
+        local transformedText = transformText(Text)
+        local lines = {}
+        table.insert(lines, transformedText)
+
+        for _, line in ipairs(lines) do
+            sendMessage(line)
+            wait(0)
+        end
+    end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Voice Chat banını aç",
+   Callback = function()
+game:GetService("VoiceChatService"):joinVoice()
+ end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Aynı sunucuya tekrar giriş yap",
+   Callback = function()
+ game:GetService("TeleportService"):Teleport(game.PlaceId)
+	 wait()
+ 
+ wait();
+ end,
+})
+
+local Section = Tab:CreateSection("hazır mesajlar")
+
+-- List of messages and their display names
+local messages = {
+    {name = "got discord?", message = "gotdisᲃord?"},
+    {name = "is this retard serious lmao 😭", message = "isthisꞅetardseriouslmao😭"},
+    {name = "sorry lil faggot not my business", message = "sorrylilfลggotnotmybusiness"},
+    {name = "kick that bitch nigger off the plane!!", message = "kickthatbi〪tchⴖiggerofftheplane!!"},
+    {name = "wanna hop on vc instead lil nigga?", message = "wannahoponvcinsteadlilⴖigga?"},
+    {name = "who wanna rape the lgbt fags with me?", message = "whowannarаpethelgbtfลgswithme?"},
+    {name = "u look retarded yet so rapeable..", message = "ulookꞅetardedyetsorаpeable.."},
+    {name = "whats the sauce of being this type of a dumbass?", message = "whatsthesauceofbeingthistypeofadum〪baรร?"}
+}
+
+local function sendMessage(message)
+    local TextChatService = game:GetService("TextChatService")
+    local textChannel = TextChatService:WaitForChild("TextChannels"):FindFirstChild("RBXGeneral")
+    if textChannel then
+        textChannel:SendAsync(message)
+    end
+end
+
+for _, msg in pairs(messages) do
+    Tab:CreateButton({
+        Name = msg.name,
+        Callback = function()
+            sendMessage(msg.message)
+        end,
+    })
+end
+
+local Tab = Window:CreateTab("skibidi", 16365563022) -- Title, Image
+local Section = Tab:CreateSection("animasyon")
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local jorkin = false
+local track = nil
+
+local function isR15(char)
+    return char and char:FindFirstChildOfClass("Humanoid") and char:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R15
+end
+
+local anim = Instance.new("Animation")
+anim.AnimationId = isR15(character) and "rbxassetid://698251653" or "rbxassetid://72042024"
+
+local function stopAnimation()
+    jorkin = false
+    if track then
+        track:Stop()
+        track = nil
+    end
+end
+
+local function playAnimationLoop()
+    if not humanoid then return end
+    if not track then
+        track = humanoid:LoadAnimation(anim)
+    end
+    jorkin = true
+    while jorkin do
+        if not track then break end
+        track:Play()
+        track:AdjustSpeed(isR15(character) and 0.7 or 0.65)
+        track.TimePosition = 0.6
+        task.wait(0.1)
+        while track and track.TimePosition < (isR15(character) and 0.7 or 0.65) and jorkin do
+            task.wait(0.1)
+        end
+        if track then
+            track:Stop()
+        end
+    end
+end
+
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    humanoid = character:WaitForChild("Humanoid")
+
+    humanoid.Died:Connect(stopAnimation)
+
+    anim.AnimationId = isR15(character) and "rbxassetid://698251653" or "rbxassetid://72042024"
+
+    if jorkin then
+        task.wait(1)
+        task.spawn(playAnimationLoop)
+    end
+end)
+
+humanoid.Died:Connect(stopAnimation)
+
+local Toggle = Tab:CreateToggle({
+    Name = "Jerk Off",
+    CurrentValue = false,
+    Flag = "Toggle_JerkOff",
+    Callback = function(Value)
+        if Value then
+            task.spawn(playAnimationLoop)
+        else
+            stopAnimation()
+        end
+    end,
+})
+
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local stepped = RunService.Stepped
+local renderstepped = RunService.RenderStepped
+local heartbeat = RunService.Heartbeat
+
+local v3 = Vector3.new
+local cf = CFrame.new
+
+_G.hiddenfling = false
+
+local function gp(parent, name, className)
+	for _, v in ipairs(parent:GetChildren()) do
+		if v.Name == name and v:IsA(className) then
+			return v
+		end
+	end
+	return nil
+end
+
+Tab:CreateToggle({
+   Name = "Görünmez fling",
+   CurrentValue = false,
+   Flag = "HiddenFlingToggle",
+   Callback = function(Value)
+      _G.hiddenfling = Value
+      if _G.hiddenfling then
+         spawn(function()
+            local hrp, char, vel, movel = nil, nil, nil, 0.1
+            while _G.hiddenfling do
+               heartbeat:Wait()
+
+               char = lp.Character
+               hrp = gp(char, "HumanoidRootPart", "BasePart") or gp(char, "Torso", "BasePart") or gp(char, "UpperTorso", "BasePart")
+               if not hrp then continue end
+
+               vel = hrp.Velocity
+               hrp.Velocity = vel * 10000 + v3(0, 10000, 0)
+               renderstepped:Wait()
+               hrp.Velocity = vel
+               stepped:Wait()
+               hrp.Velocity = vel + v3(0, movel, 0)
+               movel = -movel
+            end
+         end)
+      end
+   end
+})
+
+local Button = Tab:CreateButton({
+   Name = "Animasyonu loopla",
+   Callback = function()
+game.Players.LocalPlayer.Character.Animate.Disabled = true
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Loop kaldır",
+   Callback = function()
+game.Players.LocalPlayer.Character.Animate.Disabled = false
+   end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "Animasyon hızı",
+   CurrentValue = "",
+   PlaceholderText = "enter speed",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(value)
+     local giga = game.Players.LocalPlayer.Character
+    local liga = giga:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
+
+    for i,v in next, liga:GetPlayingAnimationTracks() do
+        v:AdjustSpeed(value)
+    end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "İki kat arttır",
+   Callback = function()
+ local giga = game.Players.LocalPlayer.Character
+    local liga = giga:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
+
+    for i,v in next, liga:GetPlayingAnimationTracks() do
+        v:AdjustSpeed(v.Speed * 2)
+    end
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Hızı düşür",
+   Callback = function()
+local giga = game.Players.LocalPlayer.Character
+    local liga = giga:FindFirstChildOfClass("Humanoid") or Char:FindFirstChildOfClass("AnimationController")
+
+    for i,v in next, liga:GetPlayingAnimationTracks() do
+        v:AdjustSpeed(v.Speed * 0.5)
+    end
+   end,
+})
+
+local Section = Tab:CreateSection("other stuff")
+
+local FLYING = false
+
+local function sFLY()
+    FLYING = true
+    repeat task.wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    local T = game.Players.LocalPlayer.Character.PrimaryPart
+    local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+    local SPEED = 0
+    local BG = Instance.new('BodyGyro')
+    local BV = Instance.new('BodyVelocity')
+
+    BG.P = 9e4
+    BG.Parent = T
+    BV.Parent = T
+    BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+    BG.cframe = T.CFrame
+    BV.velocity = Vector3.new(0, 0, 0)
+    BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+
+    local userInputService = game:GetService("UserInputService")
+
+    local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
+    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+    humanoid.PlatformStand = true
+
+    userInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            if input.KeyCode == Enum.KeyCode.W then CONTROL.F = 1 end
+            if input.KeyCode == Enum.KeyCode.S then CONTROL.B = -1 end
+            if input.KeyCode == Enum.KeyCode.A then CONTROL.L = -1 end
+            if input.KeyCode == Enum.KeyCode.D then CONTROL.R = 1 end
+            if input.KeyCode == Enum.KeyCode.Space then CONTROL.E = 1 end
+            if input.KeyCode == Enum.KeyCode.LeftControl then CONTROL.Q = -1 end
+        end
+    end)
+
+    userInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            if input.KeyCode == Enum.KeyCode.W then CONTROL.F = 0 end
+            if input.KeyCode == Enum.KeyCode.S then CONTROL.B = 0 end
+            if input.KeyCode == Enum.KeyCode.A then CONTROL.L = 0 end
+            if input.KeyCode == Enum.KeyCode.D then CONTROL.R = 0 end
+            if input.KeyCode == Enum.KeyCode.Space then CONTROL.E = 0 end
+            if input.KeyCode == Enum.KeyCode.LeftControl then CONTROL.Q = 0 end
+        end
+    end)
+
+    task.spawn(function()
+    while FLYING do
+        task.wait()
+
+        -- Get camera directions
+        local cam = workspace.CurrentCamera
+        local forward = cam.CFrame.LookVector
+        local right = cam.CFrame.RightVector
+        local up = Vector3.new(0, 1, 0)
+
+        -- Calculate movement direction based on input
+        local moveDir = (forward * (CONTROL.F + CONTROL.B)) + (right * (CONTROL.R + CONTROL.L)) + (up * (CONTROL.E + CONTROL.Q))
+        if moveDir.Magnitude > 0 then
+            moveDir = moveDir.Unit
+            SPEED = 50
+        else
+            SPEED = 0
+        end
+
+        BV.Velocity = moveDir * SPEED
+        BG.CFrame = cam.CFrame
+    end
+
+    -- Cleanup
+    BG:Destroy()
+    BV:Destroy()
+    humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+    humanoid.PlatformStand = false
+end)
+
+end
+
+local function NOFLY()
+    FLYING = false
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+        local humanoid = game.Players.LocalPlayer.Character.Humanoid
+        humanoid.PlatformStand = false
+        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+    end
+end
+
+getgenv().WalkSpeedValue = 25
+local BunnyHopActive = false
+local BunnyHopConnection
+
+local Player = game:GetService("Players").LocalPlayer
+local RunService = game:GetService("RunService")
+local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") or Player.CharacterAdded:Wait():WaitForChild("Humanoid")
+
+RunService.Heartbeat:Connect(function()
+    if BunnyHopActive and Humanoid.WalkSpeed ~= getgenv().WalkSpeedValue then
+        Humanoid.WalkSpeed = getgenv().WalkSpeedValue
+    end
+end)
+
+getgenv().WalkSpeedValue = 25
+local BunnyHopActive = false
+local BunnyHopConnection
+
+local Player = game:GetService("Players").LocalPlayer
+local RunService = game:GetService("RunService")
+local Humanoid = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid") or Player.CharacterAdded:Wait():WaitForChild("Humanoid")
+
+RunService.Heartbeat:Connect(function()
+    if BunnyHopActive and Humanoid.WalkSpeed ~= getgenv().WalkSpeedValue then
+        Humanoid.WalkSpeed = getgenv().WalkSpeedValue
+    end
+end)
+
+local FlyToggle = Tab:CreateToggle({
+    Name = "Uç",
+    CurrentValue = false,
+    Flag = "FlyToggle",
+    Callback = function(Value)
+        if Value then
+            if FLYING == false then
+                sFLY()
+            end
+        else
+            if FLYING == true then
+                NOFLY()
+            end
+        end
+    end,
+})
+
+-- Cria o alternador com uma tecla
+local FlyKeybind = Tab:CreateKeybind({
+    Name = "Uçma tuşu",
+    CurrentKeybind = "F", 
+    HoldToInteract = false,
+    Flag = "FlyKeybind", 
+    Callback = function(Keybind)
+        if FLYING then
+            NOFLY()
+        else
+            sFLY()
+        end
+    end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "Hız",
+   CurrentValue = "",
+   PlaceholderText = "hızınızı girin",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Value)
+   getgenv().WalkSpeedValue = Value; --set your desired walkspeed here
+local Player = game:service'Players'.LocalPlayer;
+Player.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()
+Player.Character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue;
+end)
+Player.Character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue;
+   end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "Max Kamera Uzaklığı",
+   CurrentValue = "",
+   PlaceholderText = "uzaklık girin",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Value)
+        game.Players.LocalPlayer.CameraMaxZoomDistance = (Value)
+
+   end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "Zıplama Gücü",
+   CurrentValue = "",
+   PlaceholderText = "enter jumppower",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Value)
+ getgenv().JumpPowerValue = Value; --set your desired walkspeed here
+local Player = game:service'Players'.LocalPlayer;
+Player.Character.Humanoid:GetPropertyChangedSignal'JumpPower':Connect(function()
+Player.Character.Humanoid.JumpPower = getgenv().JumpPowerValue;
+end)
+Player.Character.Humanoid.JumpPower = getgenv().JumpPowerValue;
+   end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "FOV (Original = 70)",
+   CurrentValue = "",
+   PlaceholderText = "enter FOV",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Value)
+        game.Players.LocalPlayer.CameraMaxZoomDistance = (Value)
+
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "CS Resoluiton",
+   Callback = function()
+   getgenv().Resolution = {
+    [".gg/scripters"] = 0.7
+}
+
+local Camera = workspace.CurrentCamera
+if getgenv().gg_scripters == nil then
+    game:GetService("RunService").RenderStepped:Connect(
+        function()
+            Camera.CFrame = Camera.CFrame * CFrame.new(0, 0, 0, 1, 0, 0, 0, getgenv().Resolution[".gg/scripters"], 0, 0, 0, 1)
+        end
+    )
+end
+getgenv().gg_scripters = "Aori0001"
+   end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "Fake Lag",
+   Callback = function()
+FakeLag = true
+ 
+ repeat wait()
+     game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+     wait(0.05)
+      game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+      wait(0.05)
+ until FakeLag == false
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Fake Lag Kapat",
+   Callback = function()
+FakeLag = false
+   end,
+})
+
+
+local Tab = Window:CreateTab("kullanışlı şeyler", 133113532239316) -- Title, Image
+local Section = Tab:CreateSection("kullunabileceğin şeyler")
+local moreScripts = {
+    {name = "Infinite Yield", url = "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"},
+    {name = "Orca Admin", url = "https://raw.githubusercontent.com/richie0866/orca/master/public/latest.lua", useHttpGetAsync = true},
+    {name = "Nameless Admin", url = "https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source"},
+    {name = "Remote spy (works for xeno/solara and more)", url = "https://raw.githubusercontent.com/InfernusScripts/Octo-Spy/refs/heads/main/Main.lua"},
+    {name = "Dex", url = "https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"},
+    {name = "Jerk off tool (Do enable inventory first)", url = "https://pastefy.app/YZoglOyJ/raw"},
+    {name = "Invisibility", url = "https://pastebin.com/raw/3Rnd9rHf"},
+    {name = "R15 Animations GUI", url = "https://pastebin.com/raw/5HNpk2yN"},
+    {name = "R15 Animations GUI 2", url = "https://raw.githubusercontent.com/ExploitFin/AquaMatrix/refs/heads/AquaMatrix/AquaMatrix"},
+    {name = "Enable Collisions", url = "custom", func = function()
+        -- Enable collisions script
+        local LP = game.Players.LocalPlayer
+        while task.wait(3) do
+            for _, v in pairs(game.Players:GetDescendants()) do
+                if v:IsA("Player") and workspace:FindFirstChild(v.Name) and v ~= LP and workspace[v.Name]:FindFirstChild("CHECKER") == nil then
+                    local checker = Instance.new("BoolValue", workspace[v.Name])
+                    checker.Name = "CHECKER"
+                    for _, part in pairs(workspace:WaitForChild(v.Name):GetDescendants()) do
+                        if part:IsA("Part") or part:IsA("MeshPart") then
+                            local collider = Instance.new("Part", part)
+                            collider.Size = part.Size
+                            collider.Position = part.Position
+                            collider.Transparency = 1
+                            local weld = Instance.new("Weld", part)
+                            weld.Part0 = part
+                            weld.Part1 = collider
+                        end
+                    end
+                end
+            end
+        end
+    end},
+    {name = "Turn r15 animations to r6", url = "https://raw.githubusercontent.com/Imagnir/r6_anims_for_r15/main/r6_anims.lua", useHttpGetAsync = true},
+}
+
+for _, scriptInfo in ipairs(moreScripts) do
+    Tab:CreateButton({
+        Name = scriptInfo.name,
+        Callback = function()
+            if scriptInfo.url == "custom" and scriptInfo.func then
+                scriptInfo.func()
+            else
+                if scriptInfo.useHttpGetAsync then
+                    loadstring(game:HttpGetAsync(scriptInfo.url))()
+                else
+                    loadstring(game:HttpGet(scriptInfo.url))()
+                end
+            end
+        end,
+    })
+end
